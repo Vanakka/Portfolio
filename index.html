@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>David's Portfolio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
@@ -178,7 +178,7 @@
     <div class="nav-icons">
       <a href="#Discord"><i class="fas fa-ticket-alt"></i><span>Discord</span></a>
       <a href="#Knowledge"><i class="fas fa-book"></i><span>Knowledge</span></a>
-      <a href="#Resume" download><i class="fas fa-file-download"></i><span>Resume</span></a>
+      <a href="./resume.pdf" download><i class="fas fa-file-download"></i><span>Resume</span></a>
       <a href="#Email"><i class="fas fa-comment-dots"></i><span>Email</span></a>
       <a href="#Projects"><i class="fas fa-tools"></i><span>Projects</span></a>
     </div>
@@ -219,17 +219,17 @@
   <footer>
     <p>© 2025 David Garrow</p>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
   <script>
     window.onload = function () {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       document.getElementById('scene-container').appendChild(renderer.domElement);
 
-      const particleCount = 100;
+      const particleCount = 80;
       const particles = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const velocities = new Float32Array(particleCount * 3);
@@ -238,9 +238,9 @@
         positions[i * 3] = (Math.random() - 0.5) * 100;
         positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
         positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
-        velocities[i * 3] = (Math.random() - 0.5) * 0.1;
-        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
-        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+        velocities[i * 3] = (Math.random() - 0.5) * 0.04;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.04;
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
       }
 
       particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -261,8 +261,11 @@
         opacity: 0.3
       });
 
-      function updateLines() {
-        scene.children = scene.children.filter(child => !child.isLine);
+      const lines = [];
+      const lineGeometries = [];
+      let lastConnectionUpdate = 0;
+
+      function initializeLineConnections() {
         for (let i = 0; i < particleCount; i++) {
           for (let j = i + 1; j < particleCount; j++) {
             const dx = positions[i * 3] - positions[j * 3];
@@ -276,30 +279,100 @@
               ]);
               const line = new THREE.Line(geometry, lineMaterial);
               scene.add(line);
+              lines.push(line);
+              lineGeometries.push({ geometry, i, j });
             }
           }
         }
       }
 
-      setInterval(updateLines, 1000); // Run every second instead of every frame
+      function updateLineConnections() {
+        if (performance.now() - lastConnectionUpdate < 5000) return;
+        lastConnectionUpdate = performance.now();
+
+        // Clear existing lines
+        lines.forEach(line => {
+          line.geometry.dispose();
+          scene.remove(line);
+        });
+        lines.length = 0;
+        lineGeometries.length = 0;
+
+        // Recompute connections
+        for (let i = 0; i < particleCount; i++) {
+          for (let j = i + 1; j < particleCount; j++) {
+            const dx = positions[i * 3] - positions[j * 3];
+            const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+            const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+            const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (distance < 20) {
+              const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
+                new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2])
+              ]);
+              const line = new THREE.Line(geometry, lineMaterial);
+              scene.add(line);
+              lines.push(line);
+              lineGeometries.push({ geometry, i, j });
+            }
+          }
+        }
+      }
+
+      function updateLinePositions() {
+        lineGeometries.forEach(({ geometry, i, j }) => {
+          const positions = geometry.attributes.position.array;
+          positions[0] = particles.attributes.position.array[i * 3];
+          positions[1] = particles.attributes.position.array[i * 3 + 1];
+          positions[2] = particles.attributes.position.array[i * 3 + 2];
+          positions[3] = particles.attributes.position.array[j * 3];
+          positions[4] = particles.attributes.position.array[j * 3 + 1];
+          positions[5] = particles.attributes.position.array[j * 3 + 2];
+          geometry.attributes.position.needsUpdate = true;
+        });
+      }
+
+      initializeLineConnections(); // Initialize lines at startup
 
       camera.position.z = 50;
 
-      function animate() {
-        requestAnimationFrame(animate);
-        for (let i = 0; i < particleCount; i++) {
-          positions[i * 3] += velocities[i * 3];
-          positions[i * 3 + 1] += velocities[i * 3 + 1];
-          positions[i * 3 + 2] += velocities[i * 3 + 2];
+      let isRendering = true;
+      let lastFrameTime = performance.now();
+      const targetFrameTime = 1000 / 60;
 
-          if (Math.abs(positions[i * 3]) > 50) velocities[i * 3] *= -1;
-          if (Math.abs(positions[i * 3 + 1]) > 50) velocities[i * 3 + 1] *= -1;
-          if (Math.abs(positions[i * 3 + 2]) > 50) velocities[i * 3 + 2] *= -1;
+      function animate() {
+        if (!isRendering) return;
+        requestAnimationFrame(animate);
+
+        try {
+          const now = performance.now();
+          const deltaTime = Math.min((now - lastFrameTime) / 1000, 0.1);
+          lastFrameTime = now;
+
+          for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] += velocities[i * 3] * deltaTime * 60;
+            positions[i * 3 + 1] += velocities[i * 3 + 1] * deltaTime * 60;
+            positions[i * 3 + 2] += velocities[i * 3 + 2] * deltaTime * 60;
+            if (Math.abs(positions[i * 3]) > 50) velocities[i * 3] *= -1;
+            if (Math.abs(positions[i * 3 + 1]) > 50) velocities[i * 3 + 1] *= -1;
+            if (Math.abs(positions[i * 3 + 2]) > 50) velocities[i * 3 + 2] *= -1;
+          }
+          particles.attributes.position.needsUpdate = true;
+          updateLinePositions();
+          updateLineConnections();
+          renderer.render(scene, camera);
+        } catch (e) {
+          console.error('Rendering error:', e);
+          isRendering = false;
         }
-        particleSystem.geometry.attributes.position.needsUpdate = true;
-        renderer.render(scene, camera);
       }
       animate();
+
+      renderer.domElement.addEventListener('webglcontextlost', (event) => {
+        event.preventDefault();
+        isRendering = false;
+        console.warn('WebGL context lost, stopping animation');
+      });
 
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
