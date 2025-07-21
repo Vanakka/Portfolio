@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fred Beisse - Tech Wizard Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0a0a23;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        header {
+            text-align: center;
+            padding: 3em 0;
+            position: relative;
+            animation: slideIn 1s ease-out;
+        }
+        header h1 {
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+        header p {
+            font-size: 1.2em;
+            color: #a0d4ff;
+        }
+        nav {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1em;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-icons a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1.5em;
+            font-size: 1.5em;
+            transition: color 0.3s, transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-icons a span {
+            font-size: 0.7em;
+            margin-top: 0.5em;
+            font-weight: 600;
+        }
+        .nav-icons a:hover {
+            color: #00ffcc;
+            text-shadow: 0 0 5px #00ffcc;
+            transform: scale(1.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2em auto;
+            padding: 0 2em;
+        }
+        .resume-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3em;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2em;
+            animation: fadeInUp 1s ease-out;
+        }
+        .resume-section h2 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+        }
+        .resume-section a {
+            display: inline-block;
+            background: #00ffcc;
+            color: #1e3c72;
+            padding: 0.8em 1.5em;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .resume-section a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+        }
+        .tab {
+            padding: 1em 2em;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 5px;
+            border-radius: 10px 10px 0 0;
+            transition: background 0.3s;
+        }
+        .tab.active {
+            background: #00ffcc;
+            color: #1e3c72;
+        }
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2em;
+            border-radius: 0 0 15px 15px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .project {
+            margin-bottom: 1.5em;
+            padding: 1em;
+            border-left: 4px solid #00ffcc;
+            transition: transform 0.3s;
+        }
+        .project:hover {
+            transform: translateX(10px);
+        }
+        .project h3 {
+            margin: 0;
+            color: #00ffcc;
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            color: #a0d4ff;
+            text-align: center;
+            padding: 1em 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+    <header>
+        <h1>Fred Beisse</h1>
+        <p>Tech Wizard & Support Specialist</p>
+    </header>
+    <nav>
+        <div class="nav-icons">
+            <a href="#ticketing"><i class="fas fa-ticket-alt"></i><span>Ticketing</span></a>
+            <a href="#knowledge"><i class="fas fa-book"></i><span>Knowledge Base</span></a>
+            <a href="Fred Beisse - A Guide to Computer User Support for Help Desk and Support Specialists-Course Technology (2014).pdf" download><i class="fas fa-file-download"></i><span>Resume</span></a>
+            <a href="#chat"><i class="fas fa-comment-dots"></i><span>Live Chat</span></a>
+            <a href="#diagnostics"><i class="fas fa-tools"></i><span>Diagnostics</span></a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="resume-section" id="resume">
+            <h2>Explore My Expertise</h2>
+            <p>Dive into my world of technical support and user solutions. Download my resume to discover my journey!</p>
+            <a href="Fred Beisse - A Guide to Computer User Support for Help Desk and Support Specialists-Course Technology (2014).pdf" download>Download Resume (PDF)</a>
+        </div>
+        <div id="projects">
+            <h2>My Tech Adventures</h2>
+            <div class="tabs">
+                <div class="tab active" onclick="openTab('project1')">Project 1</div>
+                <div class="tab" onclick="openTab('project2')">Project 2</div>
+                <div class="tab" onclick="openTab('project3')">Project 3</div>
+            </div>
+            <div id="project1" class="tab-content active">
+                <div class="project">
+                    <h3>Help Desk Automation System</h3>
+                    <p>Engineered a futuristic ticketing system that slashed response times by 30%, bringing efficiency to the help desk galaxy.</p>
+                </div>
+            </div>
+            <div id="project2" class="tab-content">
+                <div class="project">
+                    <h3>User Training Portal</h3>
+                    <p>Built an interactive digital academy to empower users with software mastery, boosting satisfaction by 25%.</p>
+                </div>
+            </div>
+            <div id="project3" class="tab-content">
+                <div class="project">
+                    <h3>Network Troubleshooting Guide</h3>
+                    <p>Crafted a legendary guide for conquering network issues, now a staple in the IT support arsenal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Fred Beisse - Powered by Innovation</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script>
+        // Three.js animated tech background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+
+        // Create nodes (particles)
+        const particleCount = 100;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+            velocities[i * 3] = (Math.random() - 0.5) * 0.1;
+            velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+        }
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x00ffcc,
+            size: 0.5,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Create lines between nearby particles
+        const lines = [];
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.3
+        });
+        function updateLines() {
+            scene.children.forEach(child => {
+                if (child.isLine) scene.remove(child);
+            });
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const dx = positions[i * 3] - positions[j * 3];
+                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    if (distance < 20) {
+                        const geometry = new THREE.BufferGeometry().setFromPoints([
+                            new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
+                            new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2])
+                        ]);
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        scene.add(line);
+                    }
+                }
+            }
+        }
+
+        camera.position.z = 50;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
+                if (Math.abs(positions[i * 3]) > 50) velocities[i * 3] *= -1;
+                if (Math.abs(positions[i * 3 + 1]) > 50) velocities[i * 3 + 1] *= -1;
+                if (Math.abs(positions[i * 3 + 2]) > 50) velocities[i * 3 + 2] *= -1;
+            }
+            particles.attributes.position.needsUpdate = true;
+            updateLines();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Tab functionality
+        function openTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
